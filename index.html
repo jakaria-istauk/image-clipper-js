@@ -3,71 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageClipper Library - Usage Examples</title>
+    <title>ImageClipper - Dynamic Image Clipping Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f8f9fa;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --gradient-1: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-2: linear-gradient(135deg, var(--accent) 0%, var(--success) 100%);
+            --gradient-3: linear-gradient(135deg, var(--warning) 0%, var(--danger) 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--light);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: white;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .badge-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .badge-icon.success { background: var(--success); }
+        .badge-icon.primary { background: var(--primary); }
+        .badge-icon.accent { background: var(--accent); }
+
+        /* Section Styles */
         .section {
             background: white;
-            margin: 20px 0;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 40px 0;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 40px;
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
         }
 
-        h2 {
-            color: #34495e;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        /* Grid and Image Styles */
         .example-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
         }
 
         .image-example {
             text-align: center;
+            padding: 25px;
+            background: var(--gray-100);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-example::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .image-example:hover::before {
+            opacity: 0.05;
+        }
+
+        .image-example:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .image-example h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .image-example img {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
-            margin: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
         }
 
+        .image-example:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Showcase Grid */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .showcase-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gray-200);
+        }
+
+        .showcase-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .showcase-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .showcase-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 20px 15px 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .showcase-item:hover .showcase-label {
+            transform: translateY(0);
+        }
+
+        /* Code Block Styles */
         .code-block {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--gray-900);
+            color: #e2e8f0;
+            padding: 30px;
+            border-radius: 16px;
             overflow-x: auto;
-            margin: 15px 0;
-            font-family: 'Courier New', Consolas, monospace;
+            margin: 25px 0;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid var(--gray-700);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(90deg, var(--gray-800) 0%, var(--gray-700) 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .code-block::after {
+            content: '⚡ Code Example';
+            position: absolute;
+            top: 12px;
+            left: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-400);
+            font-family: 'Inter', sans-serif;
         }
 
         .code-block pre {
-            margin: 0;
+            margin: 20px 0 0 0;
             white-space: pre-wrap;
+            position: relative;
+            z-index: 1;
         }
 
         .code-block code {
@@ -75,191 +342,485 @@
             font-size: inherit;
         }
 
+        /* Syntax highlighting */
+        .code-block .keyword { color: #c792ea; }
+        .code-block .string { color: #c3e88d; }
+        .code-block .comment { color: #546e7a; }
+        .code-block .function { color: #82aaff; }
+        .code-block .number { color: #f78c6c; }
+
+        /* Interactive Controls */
         .controls-demo {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 40px;
             align-items: start;
+            margin: 40px 0;
         }
 
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
+        .demo-image-container {
+            position: relative;
+            background: var(--gray-100);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .demo-image-container::before {
+            content: '🎨 Live Preview';
+            position: absolute;
+            top: 15px;
+            left: 20px;
             font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
         }
 
-        button:hover {
-            background: #2980b9;
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
         }
 
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        /* Method Demo Buttons */
+        .method-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .method-btn {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            color: var(--gray-700);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .method-btn.active {
+            background: var(--gradient-1);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Table Styles */
         .api-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 30px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
         }
 
         .api-table th,
         .api-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            padding: 16px 20px;
             text-align: left;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .api-table th {
-            background: #3498db;
+            background: var(--gradient-1);
             color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .api-table tr:nth-child(even) {
-            background: #f9f9f9;
+        .api-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .api-table tr:hover {
+            background: var(--gray-100);
+            transform: scale(1.01);
+        }
+
+        .api-table code {
+            background: var(--gray-100);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .section {
+                padding: 30px 25px;
+                margin: 30px 0;
+            }
         }
 
         @media (max-width: 768px) {
             .controls-demo {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+
+            .method-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .method-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 20px 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <h1>🎨 ImageClipper Library</h1>
-    <p style="text-align: center; font-size: 1.1em; color: #7f8c8d;">
-        A lightweight JavaScript library for dynamic image clipping effects
-    </p>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="header">
+            <h1 class="hero-title">ImageClipper</h1>
+            <p class="hero-subtitle">
+                Transform images with stunning clip-path effects. Lightweight, powerful, and incredibly easy to use.
+            </p>
 
-    <div class="section">
-        <h2>📦 Installation & Setup</h2>
-        <div class="code-block">
-            <pre><code>// Include the library in your HTML
-&lt;script src="image-clipper.js"&gt;&lt;/script&gt;
+            <div class="hero-badges">
+                <div class="badge">
+                    <div class="badge-icon success"></div>
+                    ~8KB Minified
+                </div>
+                <div class="badge">
+                    <div class="badge-icon primary"></div>
+                    Zero Dependencies
+                </div>
+                <div class="badge">
+                    <div class="badge-icon accent"></div>
+                    8 Built-in Shapes
+                </div>
+            </div>
 
-// Or import as ES6 module
-import ImageClipper from './image-clipper.js';
+            <!-- Live Shape Showcase -->
+            <div class="showcase-grid">
+                <div class="showcase-item floating" style="animation-delay: 0s;">
+                    <img id="showcase1" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop" alt="Mountain">
+                    <div class="showcase-label">Circle</div>
+                </div>
+                <div class="showcase-item floating" style="animation-delay: 0.5s;">
+                    <img id="showcase2" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop" alt="Forest">
+                    <div class="showcase-label">Heart</div>
+                </div>
+                <div class="showcase-item floating" style="animation-delay: 1s;">
+                    <img id="showcase3" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+                    <div class="showcase-label">Star</div>
+                </div>
+                <div class="showcase-item floating" style="animation-delay: 1.5s;">
+                    <img id="showcase4" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" alt="Ocean">
+                    <div class="showcase-label">Diamond</div>
+                </div>
+            </div>
+        </header>
 
-// Or require in Node.js
-const ImageClipper = require('./image-clipper.js');</code></pre>
-        </div>
-    </div>
+        <!-- Installation Section -->
+        <section class="section">
+            <h2 class="section-title">📦 Quick Start</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Get started in seconds. Just include the script and start clipping!
+            </p>
 
-    <div class="section">
-        <h2>🚀 Basic Usage</h2>
-        <div class="code-block">
-            <pre><code>// Initialize with element selector
-const clipper = new ImageClipper('#myImage');
+            <div class="code-block">
+                <pre><code><span class="comment">// Include the library in your HTML</span>
+<span class="keyword">&lt;script</span> <span class="string">src="image-clipper.js"</span><span class="keyword">&gt;&lt;/script&gt;</span>
 
-// Initialize with element reference
-const img = document.getElementById('myImage');
-const clipper = new ImageClipper(img);
+<span class="comment">// Or import as ES6 module</span>
+<span class="keyword">import</span> <span class="function">ImageClipper</span> <span class="keyword">from</span> <span class="string">'./image-clipper.js'</span>;
 
-// Initialize with options
-const clipper = new ImageClipper('#myImage', {
-    shape: 'circle',
-    size: 60,
-    x: 50,
-    y: 50,
-    rotation: 0
+<span class="comment">// Or require in Node.js</span>
+<span class="keyword">const</span> <span class="function">ImageClipper</span> = <span class="function">require</span>(<span class="string">'./image-clipper.js'</span>);</code></pre>
+            </div>
+
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary">
+                    📥 Download Library
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    📖 View Documentation
+                </a>
+            </div>
+        </section>
+
+        <!-- Basic Usage Section -->
+        <section class="section">
+            <h2 class="section-title">🚀 Basic Usage</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Three simple ways to initialize ImageClipper. Choose what works best for your project.
+            </p>
+
+            <div class="code-block">
+                <pre><code><span class="comment">// Initialize with element selector</span>
+<span class="keyword">const</span> clipper = <span class="keyword">new</span> <span class="function">ImageClipper</span>(<span class="string">'#myImage'</span>);
+
+<span class="comment">// Initialize with element reference</span>
+<span class="keyword">const</span> img = document.<span class="function">getElementById</span>(<span class="string">'myImage'</span>);
+<span class="keyword">const</span> clipper = <span class="keyword">new</span> <span class="function">ImageClipper</span>(img);
+
+<span class="comment">// Initialize with options</span>
+<span class="keyword">const</span> clipper = <span class="keyword">new</span> <span class="function">ImageClipper</span>(<span class="string">'#myImage'</span>, {
+    shape: <span class="string">'circle'</span>,
+    size: <span class="number">60</span>,
+    x: <span class="number">50</span>,
+    y: <span class="number">50</span>,
+    rotation: <span class="number">0</span>
 });</code></pre>
-        </div>
-        
-        <div class="example-grid">
-            <div class="image-example">
-                <h4>Original</h4>
-                <img id="basic1" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
             </div>
-            <div class="image-example">
-                <h4>Circle Clip</h4>
-                <img id="basic2" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+
+            <div class="example-grid">
+                <div class="image-example">
+                    <h4>🖼️ Original Image</h4>
+                    <img id="basic1" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+                </div>
+                <div class="image-example">
+                    <h4>⭕ Circle Clipping</h4>
+                    <img id="basic2" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+                </div>
+                <div class="image-example">
+                    <h4>⭐ Star Clipping</h4>
+                    <img id="basic3" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+                </div>
             </div>
-            <div class="image-example">
-                <h4>Star Clip</h4>
-                <img id="basic3" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+        </section>
+
+        <!-- Interactive Demo Section -->
+        <section class="section">
+            <h2 class="section-title">🎛️ Interactive Playground</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Play with the controls below to see ImageClipper in action. Try different shapes, sizes, and positions!
+            </p>
+
+            <div class="controls-demo">
+                <div class="demo-image-container">
+                    <img id="interactive-image" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Interactive Demo" style="width: 300px; height: 300px; border-radius: 16px;">
+                </div>
+                <div id="controls-container"></div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="section">
-        <h2>🎛️ Interactive Demo</h2>
-        <div class="controls-demo">
-            <div>
-                <img id="interactive-image" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" alt="Demo">
-            </div>
-            <div id="controls-container"></div>
-        </div>
-    </div>
+        <!-- Method Examples Section -->
+        <section class="section">
+            <h2 class="section-title">🔧 Method Examples</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Explore the powerful API methods. Each method is chainable and provides smooth transitions.
+            </p>
 
-    <div class="section">
-        <h2>🔧 Method Examples</h2>
-        <div class="code-block">
-            <pre><code>const clipper = new ImageClipper('#myImage');
+            <div class="code-block">
+                <pre><code><span class="keyword">const</span> clipper = <span class="keyword">new</span> <span class="function">ImageClipper</span>(<span class="string">'#myImage'</span>);
 
-// Change shape
-clipper.setShape('heart');
+<span class="comment">// Change shape</span>
+clipper.<span class="function">setShape</span>(<span class="string">'heart'</span>);
 
-// Set size (0-100)
-clipper.setSize(75);
+<span class="comment">// Set size (0-100)</span>
+clipper.<span class="function">setSize</span>(<span class="number">75</span>);
 
-// Set position
-clipper.setPosition(30, 70);  // x: 30%, y: 70%
+<span class="comment">// Set position</span>
+clipper.<span class="function">setPosition</span>(<span class="number">30</span>, <span class="number">70</span>);  <span class="comment">// x: 30%, y: 70%</span>
 
-// Set rotation
-clipper.setRotation(45);      // 45 degrees
+<span class="comment">// Set rotation</span>
+clipper.<span class="function">setRotation</span>(<span class="number">45</span>);      <span class="comment">// 45 degrees</span>
 
-// Set multiple properties
-clipper.set({
-    shape: 'diamond',
-    size: 60,
-    x: 50,
-    y: 50,
-    rotation: 90
+<span class="comment">// Set multiple properties</span>
+clipper.<span class="function">set</span>({
+    shape: <span class="string">'diamond'</span>,
+    size: <span class="number">60</span>,
+    x: <span class="number">50</span>,
+    y: <span class="number">50</span>,
+    rotation: <span class="number">90</span>
 });
 
-// Use presets
-clipper.preset('heart');
-clipper.preset('star');
-clipper.preset('hexagon');
+<span class="comment">// Use presets</span>
+clipper.<span class="function">preset</span>(<span class="string">'heart'</span>);
+clipper.<span class="function">preset</span>(<span class="string">'star'</span>);
+clipper.<span class="function">preset</span>(<span class="string">'hexagon'</span>);
 
-// Custom clip path
-clipper.setCustomPath('polygon(20% 0%, 80% 0%, 100% 60%, 75% 100%, 25% 100%, 0% 60%)');
-
-// Animate to new values
-clipper.animate({
-    shape: 'circle',
-    size: 80,
-    rotation: 360
-}, 2000); // 2 seconds
-
-// Get current values
-const currentOptions = clipper.get();
-const clipPath = clipper.getClipPath();
-
-// Reset to defaults
-clipper.reset();
-
-// Remove clipping
-clipper.clear();</code></pre>
-        </div>
-
-        <div>
-            <h4>Try these methods:</h4>
-            <button onclick="demoMethods('heart')">Heart</button>
-            <button onclick="demoMethods('star')">Star</button>
-            <button onclick="demoMethods('diamond')">Diamond</button>
-            <button onclick="demoMethods('animate')">Animate</button>
-            <button onclick="demoMethods('reset')">Reset</button>
-            <div class="image-example">
-                <img id="method-demo" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop" alt="Method Demo">
+<span class="comment">// Animate to new values</span>
+clipper.<span class="function">animate</span>({
+    shape: <span class="string">'circle'</span>,
+    size: <span class="number">80</span>,
+    rotation: <span class="number">360</span>
+}, <span class="number">2000</span>); <span class="comment">// 2 seconds</span></code></pre>
             </div>
-        </div>
-    </div>
 
-    <div class="section">
-        <h2>📚 API Reference</h2>
-        <table class="api-table">
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; margin-top: 40px;">
+                <div>
+                    <h4 style="color: var(--gray-800); margin-bottom: 20px; font-size: 1.2rem;">🎮 Try these methods:</h4>
+                    <div class="method-buttons">
+                        <button class="method-btn" onclick="demoMethods('heart')" data-method="heart">
+                            💖 Heart
+                        </button>
+                        <button class="method-btn" onclick="demoMethods('star')" data-method="star">
+                            ⭐ Star
+                        </button>
+                        <button class="method-btn" onclick="demoMethods('diamond')" data-method="diamond">
+                            💎 Diamond
+                        </button>
+                        <button class="method-btn" onclick="demoMethods('hexagon')" data-method="hexagon">
+                            🔷 Hexagon
+                        </button>
+                        <button class="method-btn" onclick="demoMethods('animate')" data-method="animate">
+                            🎬 Animate
+                        </button>
+                        <button class="method-btn" onclick="demoMethods('reset')" data-method="reset">
+                            🔄 Reset
+                        </button>
+                    </div>
+                </div>
+                <div class="demo-image-container">
+                    <img id="method-demo" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop" alt="Method Demo" style="width: 250px; height: 250px; border-radius: 16px;">
+                </div>
+            </div>
+        </section>
+
+        <!-- API Reference Section -->
+        <section class="section">
+            <h2 class="section-title">📚 API Reference</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Complete method reference with parameters and descriptions. All methods are chainable for fluent usage.
+            </p>
+
+            <table class="api-table">
             <thead>
                 <tr>
                     <th>Method</th>
@@ -339,50 +900,62 @@ clipper.clear();</code></pre>
                     <td>Create interactive UI controls</td>
                 </tr>
             </tbody>
-        </table>
-    </div>
+            </table>
+        </section>
 
-    <div class="section">
-        <h2>🎯 Advanced Examples</h2>
-        <div class="code-block">
-            <pre><code>// Clip multiple images at once
-const clippers = ImageClipper.clipAll('.gallery img', {
-    shape: 'hexagon',
-    size: 80
+        <!-- Advanced Examples Section -->
+        <section class="section">
+            <h2 class="section-title">🎯 Advanced Examples</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 1.1rem;">
+                Real-world examples showing advanced usage patterns and creative implementations.
+            </p>
+
+            <div class="code-block">
+                <pre><code><span class="comment">// Clip multiple images at once</span>
+<span class="keyword">const</span> clippers = <span class="function">ImageClipper</span>.<span class="function">clipAll</span>(<span class="string">'.gallery img'</span>, {
+    shape: <span class="string">'hexagon'</span>,
+    size: <span class="number">80</span>
 });
 
-// Chain methods
-new ImageClipper('#hero-image')
-    .setShape('circle')
-    .setSize(90)
-    .setPosition(60, 40);
+<span class="comment">// Chain methods for fluent API</span>
+<span class="keyword">new</span> <span class="function">ImageClipper</span>(<span class="string">'#hero-image'</span>)
+    .<span class="function">setShape</span>(<span class="string">'circle'</span>)
+    .<span class="function">setSize</span>(<span class="number">90</span>)
+    .<span class="function">setPosition</span>(<span class="number">60</span>, <span class="number">40</span>);
 
-// Event-driven clipping
-document.getElementById('shape-select').addEventListener('change', (e) => {
-    clipper.setShape(e.target.value);
+<span class="comment">// Event-driven clipping</span>
+document.<span class="function">getElementById</span>(<span class="string">'shape-select'</span>).<span class="function">addEventListener</span>(<span class="string">'change'</span>, (e) => {
+    clipper.<span class="function">setShape</span>(e.target.value);
 });
 
-// Responsive clipping
-window.addEventListener('resize', () => {
-    if (window.innerWidth < 768) {
-        clipper.setSize(100);  // Full size on mobile
-    } else {
-        clipper.setSize(75);   // Clipped on desktop
+<span class="comment">// Responsive clipping</span>
+window.<span class="function">addEventListener</span>(<span class="string">'resize'</span>, () => {
+    <span class="keyword">if</span> (window.innerWidth < <span class="number">768</span>) {
+        clipper.<span class="function">setSize</span>(<span class="number">100</span>);  <span class="comment">// Full size on mobile</span>
+    } <span class="keyword">else</span> {
+        clipper.<span class="function">setSize</span>(<span class="number">75</span>);   <span class="comment">// Clipped on desktop</span>
     }
 });
 
-// Custom animations
-clipper.animate({ rotation: 360 }, 1000)  // Spin
-    .then(() => clipper.animate({ size: 20 }, 500))  // Shrink
-    .then(() => clipper.animate({ size: 80 }, 500)); // Grow</code></pre>
-        </div>
+<span class="comment">// Sequential animations</span>
+clipper.<span class="function">animate</span>({ rotation: <span class="number">360</span> }, <span class="number">1000</span>)  <span class="comment">// Spin</span>
+    .<span class="function">then</span>(() => clipper.<span class="function">animate</span>({ size: <span class="number">20</span> }, <span class="number">500</span>))  <span class="comment">// Shrink</span>
+    .<span class="function">then</span>(() => clipper.<span class="function">animate</span>({ size: <span class="number">80</span> }, <span class="number">500</span>)); <span class="comment">// Grow</span></code></pre>
+            </div>
+        </section>
     </div>
 
     <!-- Include the ImageClipper library -->
-     <script src="image-clipper.js"></script>
+    <script src="image-clipper.js"></script>
     <script>
         // Demo initialization
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize showcase images with different shapes
+            new ImageClipper('#showcase1', { shape: 'circle', size: 70 });
+            new ImageClipper('#showcase2', { shape: 'heart', size: 65 });
+            new ImageClipper('#showcase3', { shape: 'star', size: 75 });
+            new ImageClipper('#showcase4', { shape: 'diamond', size: 70 });
+
             // Basic examples
             new ImageClipper('#basic2', { shape: 'circle', size: 60 });
             new ImageClipper('#basic3', { shape: 'star', size: 70 });
@@ -393,10 +966,60 @@ clipper.animate({ rotation: 360 }, 1000)  // Spin
 
             // Method demo
             window.methodClipper = new ImageClipper('#method-demo');
+
+            // Add auto-rotation to showcase images
+            setInterval(() => {
+                const showcaseClippers = [
+                    new ImageClipper('#showcase1'),
+                    new ImageClipper('#showcase2'),
+                    new ImageClipper('#showcase3'),
+                    new ImageClipper('#showcase4')
+                ];
+
+                showcaseClippers.forEach((clipper, index) => {
+                    const currentRotation = clipper.get().rotation;
+                    clipper.animate({ rotation: currentRotation + 90 }, 1000);
+                });
+            }, 5000);
+
+            // Add intersection observer for animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            document.querySelectorAll('.section').forEach(section => {
+                observer.observe(section);
+            });
         });
 
-        // Demo methods for buttons
+        // Enhanced demo methods for buttons
         function demoMethods(action) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.method-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to clicked button
+            const clickedBtn = document.querySelector(`[data-method="${action}"]`);
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+
+                // Remove active class after animation
+                setTimeout(() => {
+                    clickedBtn.classList.remove('active');
+                }, action === 'animate' ? 2000 : 1000);
+            }
+
             switch(action) {
                 case 'heart':
                     window.methodClipper.preset('heart');
@@ -406,6 +1029,9 @@ clipper.animate({ rotation: 360 }, 1000)  // Spin
                     break;
                 case 'diamond':
                     window.methodClipper.preset('diamond');
+                    break;
+                case 'hexagon':
+                    window.methodClipper.preset('hexagon');
                     break;
                 case 'animate':
                     window.methodClipper.animate({
@@ -419,6 +1045,20 @@ clipper.animate({ rotation: 360 }, 1000)  // Spin
                     break;
             }
         }
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
