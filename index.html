@@ -950,11 +950,13 @@ clipper.<span class="function">animate</span>({ rotation: <span class="number">3
     <script>
         // Demo initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize showcase images with different shapes
-            new ImageClipper('#showcase1', { shape: 'circle', size: 70 });
-            new ImageClipper('#showcase2', { shape: 'heart', size: 65 });
-            new ImageClipper('#showcase3', { shape: 'star', size: 75 });
-            new ImageClipper('#showcase4', { shape: 'diamond', size: 70 });
+            // Initialize showcase images with different shapes and store references
+            window.showcaseClippers = {
+                showcase1: new ImageClipper('#showcase1', { shape: 'circle', size: 70 }),
+                showcase2: new ImageClipper('#showcase2', { shape: 'heart', size: 65 }),
+                showcase3: new ImageClipper('#showcase3', { shape: 'star', size: 75 }),
+                showcase4: new ImageClipper('#showcase4', { shape: 'diamond', size: 70 })
+            };
 
             // Basic examples
             new ImageClipper('#basic2', { shape: 'circle', size: 60 });
@@ -967,16 +969,9 @@ clipper.<span class="function">animate</span>({ rotation: <span class="number">3
             // Method demo
             window.methodClipper = new ImageClipper('#method-demo');
 
-            // Add auto-rotation to showcase images
+            // Add auto-rotation to showcase images using stored references
             setInterval(() => {
-                const showcaseClippers = [
-                    new ImageClipper('#showcase1'),
-                    new ImageClipper('#showcase2'),
-                    new ImageClipper('#showcase3'),
-                    new ImageClipper('#showcase4')
-                ];
-
-                showcaseClippers.forEach((clipper, index) => {
+                Object.values(window.showcaseClippers).forEach((clipper, index) => {
                     const currentRotation = clipper.get().rotation;
                     clipper.animate({ rotation: currentRotation + 90 }, 1000);
                 });
