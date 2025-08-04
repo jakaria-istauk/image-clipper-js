@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageClipper Library - Usage Examples</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .image-example {
+            text-align: center;
+        }
+
+        .image-example img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .code-block code {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .controls-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .api-table th,
+        .api-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .api-table th {
+            background: #3498db;
+            color: white;
+        }
+
+        .api-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            .controls-demo {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 ImageClipper Library</h1>
+    <p style="text-align: center; font-size: 1.1em; color: #7f8c8d;">
+        A lightweight JavaScript library for dynamic image clipping effects
+    </p>
+
+    <div class="section">
+        <h2>📦 Installation & Setup</h2>
+        <div class="code-block">
+            <pre><code>// Include the library in your HTML
+&lt;script src="image-clipper.js"&gt;&lt;/script&gt;
+
+// Or import as ES6 module
+import ImageClipper from './image-clipper.js';
+
+// Or require in Node.js
+const ImageClipper = require('./image-clipper.js');</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Basic Usage</h2>
+        <div class="code-block">
+            <pre><code>// Initialize with element selector
+const clipper = new ImageClipper('#myImage');
+
+// Initialize with element reference
+const img = document.getElementById('myImage');
+const clipper = new ImageClipper(img);
+
+// Initialize with options
+const clipper = new ImageClipper('#myImage', {
+    shape: 'circle',
+    size: 60,
+    x: 50,
+    y: 50,
+    rotation: 0
+});</code></pre>
+        </div>
+        
+        <div class="example-grid">
+            <div class="image-example">
+                <h4>Original</h4>
+                <img id="basic1" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+            </div>
+            <div class="image-example">
+                <h4>Circle Clip</h4>
+                <img id="basic2" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+            </div>
+            <div class="image-example">
+                <h4>Star Clip</h4>
+                <img id="basic3" src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop" alt="Nature">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎛️ Interactive Demo</h2>
+        <div class="controls-demo">
+            <div>
+                <img id="interactive-image" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" alt="Demo">
+            </div>
+            <div id="controls-container"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Method Examples</h2>
+        <div class="code-block">
+            <pre><code>const clipper = new ImageClipper('#myImage');
+
+// Change shape
+clipper.setShape('heart');
+
+// Set size (0-100)
+clipper.setSize(75);
+
+// Set position
+clipper.setPosition(30, 70);  // x: 30%, y: 70%
+
+// Set rotation
+clipper.setRotation(45);      // 45 degrees
+
+// Set multiple properties
+clipper.set({
+    shape: 'diamond',
+    size: 60,
+    x: 50,
+    y: 50,
+    rotation: 90
+});
+
+// Use presets
+clipper.preset('heart');
+clipper.preset('star');
+clipper.preset('hexagon');
+
+// Custom clip path
+clipper.setCustomPath('polygon(20% 0%, 80% 0%, 100% 60%, 75% 100%, 25% 100%, 0% 60%)');
+
+// Animate to new values
+clipper.animate({
+    shape: 'circle',
+    size: 80,
+    rotation: 360
+}, 2000); // 2 seconds
+
+// Get current values
+const currentOptions = clipper.get();
+const clipPath = clipper.getClipPath();
+
+// Reset to defaults
+clipper.reset();
+
+// Remove clipping
+clipper.clear();</code></pre>
+        </div>
+
+        <div>
+            <h4>Try these methods:</h4>
+            <button onclick="demoMethods('heart')">Heart</button>
+            <button onclick="demoMethods('star')">Star</button>
+            <button onclick="demoMethods('diamond')">Diamond</button>
+            <button onclick="demoMethods('animate')">Animate</button>
+            <button onclick="demoMethods('reset')">Reset</button>
+            <div class="image-example">
+                <img id="method-demo" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop" alt="Method Demo">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📚 API Reference</h2>
+        <table class="api-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Parameters</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>setShape(shape)</code></td>
+                    <td>string</td>
+                    <td>Set clipping shape: 'circle', 'ellipse', 'rectangle', 'triangle', 'diamond', 'hexagon', 'star', 'heart'</td>
+                </tr>
+                <tr>
+                    <td><code>setSize(size)</code></td>
+                    <td>number (0-100)</td>
+                    <td>Set the size of the clipping area as percentage</td>
+                </tr>
+                <tr>
+                    <td><code>setPosition(x, y)</code></td>
+                    <td>number, number</td>
+                    <td>Set X and Y position of the clipping area (0-100%)</td>
+                </tr>
+                <tr>
+                    <td><code>setX(x)</code></td>
+                    <td>number (0-100)</td>
+                    <td>Set X position of the clipping area</td>
+                </tr>
+                <tr>
+                    <td><code>setY(y)</code></td>
+                    <td>number (0-100)</td>
+                    <td>Set Y position of the clipping area</td>
+                </tr>
+                <tr>
+                    <td><code>setRotation(degrees)</code></td>
+                    <td>number</td>
+                    <td>Set rotation in degrees (0-360)</td>
+                </tr>
+                <tr>
+                    <td><code>set(options)</code></td>
+                    <td>object</td>
+                    <td>Set multiple options at once</td>
+                </tr>
+                <tr>
+                    <td><code>preset(name)</code></td>
+                    <td>string</td>
+                    <td>Apply preset configuration</td>
+                </tr>
+                <tr>
+                    <td><code>animate(options, duration)</code></td>
+                    <td>object, number</td>
+                    <td>Animate to new values over specified duration (ms)</td>
+                </tr>
+                <tr>
+                    <td><code>get()</code></td>
+                    <td>-</td>
+                    <td>Get current options object</td>
+                </tr>
+                <tr>
+                    <td><code>getClipPath()</code></td>
+                    <td>-</td>
+                    <td>Get current CSS clip-path value</td>
+                </tr>
+                <tr>
+                    <td><code>reset()</code></td>
+                    <td>-</td>
+                    <td>Reset to default values</td>
+                </tr>
+                <tr>
+                    <td><code>clear()</code></td>
+                    <td>-</td>
+                    <td>Remove all clipping effects</td>
+                </tr>
+                <tr>
+                    <td><code>createControls(container)</code></td>
+                    <td>string|element</td>
+                    <td>Create interactive UI controls</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Advanced Examples</h2>
+        <div class="code-block">
+            <pre><code>// Clip multiple images at once
+const clippers = ImageClipper.clipAll('.gallery img', {
+    shape: 'hexagon',
+    size: 80
+});
+
+// Chain methods
+new ImageClipper('#hero-image')
+    .setShape('circle')
+    .setSize(90)
+    .setPosition(60, 40);
+
+// Event-driven clipping
+document.getElementById('shape-select').addEventListener('change', (e) => {
+    clipper.setShape(e.target.value);
+});
+
+// Responsive clipping
+window.addEventListener('resize', () => {
+    if (window.innerWidth < 768) {
+        clipper.setSize(100);  // Full size on mobile
+    } else {
+        clipper.setSize(75);   // Clipped on desktop
+    }
+});
+
+// Custom animations
+clipper.animate({ rotation: 360 }, 1000)  // Spin
+    .then(() => clipper.animate({ size: 20 }, 500))  // Shrink
+    .then(() => clipper.animate({ size: 80 }, 500)); // Grow</code></pre>
+        </div>
+    </div>
+
+    <!-- Include the ImageClipper library -->
+    <script>
+        // ImageClipper library code (normally loaded from separate file)
+        class ImageClipper {
+            constructor(selector, options = {}) {
+                this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
+                
+                if (!this.element) {
+                    throw new Error('ImageClipper: Element not found');
+                }
+
+                this.options = {
+                    shape: 'circle',
+                    size: 50,
+                    x: 50,
+                    y: 50,
+                    rotation: 0,
+                    transition: '0.3s ease',
+                    ...options
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.element.style.transition = `all ${this.options.transition}`;
+                this.updateClip();
+            }
+
+            updateClip() {
+                const clipPath = this.generateClipPath();
+                this.element.style.clipPath = clipPath;
+                this.element.style.transform = `rotate(${this.options.rotation}deg)`;
+                return clipPath;
+            }
+
+            generateClipPath() {
+                const { shape, size, x, y } = this.options;
+
+                switch (shape) {
+                    case 'circle':
+                        return `circle(${size}% at ${x}% ${y}%)`;
+
+                    case 'ellipse':
+                        return `ellipse(${size}% ${size * 0.7}% at ${x}% ${y}%)`;
+
+                    case 'rectangle':
+                    case 'inset':
+                        const inset = (100 - size) / 2;
+                        return `inset(${inset}% ${inset}% ${inset}% ${inset}%)`;
+
+                    case 'triangle':
+                        return `polygon(${x}% ${Math.max(0, y - size)}%, ${Math.max(0, x - size)}% ${Math.min(100, y + size)}%, ${Math.min(100, x + size)}% ${Math.min(100, y + size)}%)`;
+
+                    case 'diamond':
+                        // Create a diamond with proper scaling and positioning
+                        const diamondSize = size / 100;
+                        const diamondX = x / 100;
+                        const diamondY = y / 100;
+
+                        // Diamond coordinates (normalized to 0-1)
+                        const diamondPoints = [
+                            [0.5, 0.0],   // Top
+                            [1.0, 0.5],   // Right
+                            [0.5, 1.0],   // Bottom
+                            [0.0, 0.5]    // Left
+                        ];
+
+                        // Scale and position the diamond
+                        const scaledDiamondPoints = diamondPoints.map(([px, py]) => {
+                            const scaledX = diamondX + (px - 0.5) * diamondSize;
+                            const scaledY = diamondY + (py - 0.5) * diamondSize;
+                            return `${Math.max(0, Math.min(100, scaledX * 100))}% ${Math.max(0, Math.min(100, scaledY * 100))}%`;
+                        });
+
+                        return `polygon(${scaledDiamondPoints.join(', ')})`;
+
+                    case 'hexagon':
+                        // Create a hexagon with proper scaling and positioning
+                        const hexSize = size / 100;
+                        const hexX = x / 100;
+                        const hexY = y / 100;
+
+                        // Hexagon coordinates (normalized to 0-1)
+                        const hexPoints = [
+                            [0.25, 0.0],  // Top left
+                            [0.75, 0.0],  // Top right
+                            [1.0, 0.5],   // Right
+                            [0.75, 1.0],  // Bottom right
+                            [0.25, 1.0],  // Bottom left
+                            [0.0, 0.5]    // Left
+                        ];
+
+                        // Scale and position the hexagon
+                        const scaledHexPoints = hexPoints.map(([px, py]) => {
+                            const scaledX = hexX + (px - 0.5) * hexSize;
+                            const scaledY = hexY + (py - 0.5) * hexSize;
+                            return `${Math.max(0, Math.min(100, scaledX * 100))}% ${Math.max(0, Math.min(100, scaledY * 100))}%`;
+                        });
+
+                        return `polygon(${scaledHexPoints.join(', ')})`;
+
+                    case 'star':
+                        // Create a 5-pointed star with proper scaling and positioning
+                        const starSize = size / 100;
+                        const starX = x / 100;
+                        const starY = y / 100;
+
+                        // 5-pointed star coordinates (normalized to 0-1)
+                        const starPoints = [
+                            [0.5, 0.0],   // Top point
+                            [0.61, 0.35], // Top right inner
+                            [0.98, 0.35], // Right point
+                            [0.68, 0.57], // Bottom right inner
+                            [0.79, 0.91], // Bottom right point
+                            [0.5, 0.70],  // Bottom inner
+                            [0.21, 0.91], // Bottom left point
+                            [0.32, 0.57], // Bottom left inner
+                            [0.02, 0.35], // Left point
+                            [0.39, 0.35]  // Top left inner
+                        ];
+
+                        // Scale and position the star
+                        const scaledStarPoints = starPoints.map(([px, py]) => {
+                            const scaledX = starX + (px - 0.5) * starSize;
+                            const scaledY = starY + (py - 0.5) * starSize;
+                            return `${Math.max(0, Math.min(100, scaledX * 100))}% ${Math.max(0, Math.min(100, scaledY * 100))}%`;
+                        });
+
+                        return `polygon(${scaledStarPoints.join(', ')})`;
+
+                    case 'heart':
+                        // Create a more accurate heart shape with proper curves
+                        const heartSize = size / 100;
+                        const heartX = x / 100;
+                        const heartY = y / 100;
+
+                        // Heart shape coordinates (normalized to 0-1, then scaled and positioned)
+                        const heartPoints = [
+                            [0.5, 0.2],   // Top center
+                            [0.7, 0.05],  // Right top curve start
+                            [0.9, 0.05],  // Right top curve peak
+                            [0.95, 0.15], // Right top curve end
+                            [0.9, 0.3],   // Right side
+                            [0.5, 0.7],   // Bottom point approach
+                            [0.5, 0.95],  // Bottom point
+                            [0.5, 0.7],   // Bottom point approach (return)
+                            [0.1, 0.3],   // Left side
+                            [0.05, 0.15], // Left top curve end
+                            [0.1, 0.05],  // Left top curve peak
+                            [0.3, 0.05],  // Left top curve start
+                        ];
+
+                        // Scale and position the heart
+                        const scaledHeartPoints = heartPoints.map(([px, py]) => {
+                            const scaledX = heartX + (px - 0.5) * heartSize;
+                            const scaledY = heartY + (py - 0.5) * heartSize;
+                            return `${Math.max(0, Math.min(100, scaledX * 100))}% ${Math.max(0, Math.min(100, scaledY * 100))}%`;
+                        });
+
+                        return `polygon(${scaledHeartPoints.join(', ')})`;
+
+                    case 'custom':
+                        return this.options.customPath || 'none';
+
+                    default:
+                        return 'none';
+                }
+            }
+
+            setShape(shape) {
+                this.options.shape = shape;
+                return this.updateClip();
+            }
+
+            setSize(size) {
+                this.options.size = Math.max(0, Math.min(100, size));
+                return this.updateClip();
+            }
+
+            setPosition(x, y) {
+                this.options.x = Math.max(0, Math.min(100, x));
+                this.options.y = Math.max(0, Math.min(100, y));
+                return this.updateClip();
+            }
+
+            setX(x) {
+                this.options.x = Math.max(0, Math.min(100, x));
+                return this.updateClip();
+            }
+
+            setY(y) {
+                this.options.y = Math.max(0, Math.min(100, y));
+                return this.updateClip();
+            }
+
+            setRotation(rotation) {
+                this.options.rotation = rotation % 360;
+                return this.updateClip();
+            }
+
+            setCustomPath(path) {
+                this.options.customPath = path;
+                this.options.shape = 'custom';
+                return this.updateClip();
+            }
+
+            set(options) {
+                Object.assign(this.options, options);
+                return this.updateClip();
+            }
+
+            get() {
+                return { ...this.options };
+            }
+
+            getClipPath() {
+                return this.generateClipPath();
+            }
+
+            reset() {
+                this.options = {
+                    shape: 'circle',
+                    size: 50,
+                    x: 50,
+                    y: 50,
+                    rotation: 0,
+                    transition: '0.3s ease'
+                };
+                return this.updateClip();
+            }
+
+            clear() {
+                this.element.style.clipPath = 'none';
+                this.element.style.transform = 'none';
+            }
+
+            animate(targetOptions, duration = 1000) {
+                const startOptions = { ...this.options };
+                const startTime = performance.now();
+
+                const animateStep = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+
+                    Object.keys(targetOptions).forEach(key => {
+                        if (typeof targetOptions[key] === 'number') {
+                            const start = startOptions[key] || 0;
+                            const end = targetOptions[key];
+                            this.options[key] = start + (end - start) * easeOut;
+                        } else {
+                            this.options[key] = targetOptions[key];
+                        }
+                    });
+
+                    this.updateClip();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animateStep);
+                    }
+                };
+
+                requestAnimationFrame(animateStep);
+            }
+
+            preset(presetName) {
+                const presets = {
+                    circle: { shape: 'circle', size: 45, x: 50, y: 50, rotation: 0 },
+                    ellipse: { shape: 'ellipse', size: 60, x: 50, y: 50, rotation: 0 },
+                    square: { shape: 'rectangle', size: 70, x: 50, y: 50, rotation: 0 },
+                    diamond: { shape: 'diamond', size: 60, x: 50, y: 50, rotation: 0 },
+                    triangle: { shape: 'triangle', size: 50, x: 50, y: 50, rotation: 0 },
+                    hexagon: { shape: 'hexagon', size: 60, x: 50, y: 50, rotation: 0 },
+                    star: { shape: 'star', size: 70, x: 50, y: 50, rotation: 0 },
+                    heart: { shape: 'heart', size: 60, x: 50, y: 50, rotation: 0 }
+                };
+
+                if (presets[presetName]) {
+                    return this.set(presets[presetName]);
+                } else {
+                    console.warn(`ImageClipper: Preset "${presetName}" not found`);
+                    return this.getClipPath();
+                }
+            }
+
+            createControls(container) {
+                const controlsHTML = `
+                    <div class="image-clipper-controls" style="
+                        display: grid;
+                        gap: 15px;
+                        padding: 20px;
+                        background: #f5f5f5;
+                        border-radius: 10px;
+                        font-family: Arial, sans-serif;
+                    ">
+                        <div>
+                            <label>Shape:</label>
+                            <select class="ic-shape" style="width: 100%; padding: 8px; margin-top: 5px;">
+                                <option value="circle">Circle</option>
+                                <option value="ellipse">Ellipse</option>
+                                <option value="rectangle">Rectangle</option>
+                                <option value="triangle">Triangle</option>
+                                <option value="diamond">Diamond</option>
+                                <option value="hexagon">Hexagon</option>
+                                <option value="star">Star</option>
+                                <option value="heart">Heart</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Size: <span class="ic-size-val">50%</span></label>
+                            <input type="range" class="ic-size" min="10" max="100" value="50" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label>X Position: <span class="ic-x-val">50%</span></label>
+                            <input type="range" class="ic-x" min="0" max="100" value="50" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label>Y Position: <span class="ic-y-val">50%</span></label>
+                            <input type="range" class="ic-y" min="0" max="100" value="50" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label>Rotation: <span class="ic-rotation-val">0°</span></label>
+                            <input type="range" class="ic-rotation" min="0" max="360" value="0" style="width: 100%;">
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="ic-preset" data-preset="circle">Circle</button>
+                            <button class="ic-preset" data-preset="heart">Heart</button>
+                            <button class="ic-preset" data-preset="star">Star</button>
+                            <button class="ic-preset" data-preset="diamond">Diamond</button>
+                        </div>
+                    </div>
+                `;
+
+                const controlContainer = typeof container === 'string' ? 
+                    document.querySelector(container) : container;
+                
+                controlContainer.innerHTML = controlsHTML;
+
+                const controls = controlContainer.querySelector('.image-clipper-controls');
+                
+                controls.querySelector('.ic-shape').addEventListener('change', (e) => {
+                    this.setShape(e.target.value);
+                });
+
+                controls.querySelector('.ic-size').addEventListener('input', (e) => {
+                    this.setSize(e.target.value);
+                    controls.querySelector('.ic-size-val').textContent = e.target.value + '%';
+                });
+
+                controls.querySelector('.ic-x').addEventListener('input', (e) => {
+                    this.setX(e.target.value);
+                    controls.querySelector('.ic-x-val').textContent = e.target.value + '%';
+                });
+
+                controls.querySelector('.ic-y').addEventListener('input', (e) => {
+                    this.setY(e.target.value);
+                    controls.querySelector('.ic-y-val').textContent = e.target.value + '%';
+                });
+
+                controls.querySelector('.ic-rotation').addEventListener('input', (e) => {
+                    this.setRotation(e.target.value);
+                    controls.querySelector('.ic-rotation-val').textContent = e.target.value + '°';
+                });
+
+                controls.querySelectorAll('.ic-preset').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.preset(btn.dataset.preset);
+                        this.syncControls(controls);
+                    });
+                    btn.style.cssText = 'padding: 8px 16px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer;';
+                });
+
+                return this;
+            }
+
+            syncControls(controls) {
+                controls.querySelector('.ic-shape').value = this.options.shape;
+                controls.querySelector('.ic-size').value = this.options.size;
+                controls.querySelector('.ic-x').value = this.options.x;
+                controls.querySelector('.ic-y').value = this.options.y;
+                controls.querySelector('.ic-rotation').value = this.options.rotation;
+                
+                controls.querySelector('.ic-size-val').textContent = this.options.size + '%';
+                controls.querySelector('.ic-x-val').textContent = this.options.x + '%';
+                controls.querySelector('.ic-y-val').textContent = this.options.y + '%';
+                controls.querySelector('.ic-rotation-val').textContent = this.options.rotation + '°';
+            }
+        }
+
+        ImageClipper.clipAll = function(selector, options) {
+            const elements = document.querySelectorAll(selector);
+            return Array.from(elements).map(el => new ImageClipper(el, options));
+        };
+
+        // Demo initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Basic examples
+            new ImageClipper('#basic2', { shape: 'circle', size: 60 });
+            new ImageClipper('#basic3', { shape: 'star', size: 70 });
+
+            // Interactive demo with controls
+            const interactiveClipper = new ImageClipper('#interactive-image');
+            interactiveClipper.createControls('#controls-container');
+
+            // Method demo
+            window.methodClipper = new ImageClipper('#method-demo');
+        });
+
+        // Demo methods for buttons
+        function demoMethods(action) {
+            switch(action) {
+                case 'heart':
+                    window.methodClipper.preset('heart');
+                    break;
+                case 'star':
+                    window.methodClipper.preset('star');
+                    break;
+                case 'diamond':
+                    window.methodClipper.preset('diamond');
+                    break;
+                case 'animate':
+                    window.methodClipper.animate({
+                        shape: 'circle',
+                        size: 80,
+                        rotation: 720
+                    }, 2000);
+                    break;
+                case 'reset':
+                    window.methodClipper.reset();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
